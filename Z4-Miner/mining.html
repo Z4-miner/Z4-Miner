@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Z4 Miner - Mining</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- Icons -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{background:radial-gradient(circle at top,#0f172a,#020617);color:#fff;}
+.app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:120px;}
+
+/* Header */
+.header{padding:18px;display:flex;justify-content:space-between;align-items:center;}
+.header h2{font-weight:800;}
+
+/* Balance Card */
+.balance-card{
+  margin:0 16px;
+  background:linear-gradient(135deg,#020617,#111827);
+  border-radius:26px;
+  padding:22px;
+  text-align:center;
+  box-shadow:0 0 30px rgba(250,204,21,.25);
+}
+.balance-card span{font-size:13px;opacity:.7;}
+.balance-card h1{font-size:36px;color:#facc15;margin-top:6px;}
+
+/* Team Row */
+.team-row{
+  margin:16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.team-box{
+  background:linear-gradient(135deg,#0b1220,#020617);
+  border-radius:18px;
+  padding:14px;
+  text-align:center;
+}
+.team-box span{font-size:12px;opacity:.7;}
+.team-box h3{margin-top:6px;color:#38bdf8;}
+
+/* Miner Robot */
+.miner-box{
+  margin:20px 16px;
+  background:linear-gradient(135deg,#0b1220,#020617);
+  border-radius:28px;
+  padding:22px;
+  text-align:center;
+}
+
+.robot-wrap{
+  position:relative;
+  width:120px;
+  height:120px;
+  margin:0 auto 10px;
+}
+
+.energy-ring{
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:3px solid rgba(56,189,248,.2);
+  border-top:3px solid #38bdf8;
+  animation:spin 4s linear infinite;
+}
+
+.robot{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  animation:float 3s ease-in-out infinite;
+}
+
+.robot .head{
+  width:46px;
+  height:36px;
+  background:linear-gradient(135deg,#facc15,#f59e0b);
+  border-radius:10px;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  padding:0 6px;
+  box-shadow:0 0 12px rgba(250,204,21,.8);
+}
+
+.robot .eye{
+  width:6px;
+  height:6px;
+  background:#000;
+  border-radius:50%;
+  animation:blink 4s infinite;
+}
+
+.robot .body{
+  width:32px;
+  height:28px;
+  background:#38bdf8;
+  margin:4px auto 0;
+  border-radius:8px;
+  box-shadow:0 0 10px rgba(56,189,248,.6);
+}
+
+/* Earnings */
+.earn{
+  margin-top:10px;
+  font-size:26px;
+  color:#facc15;
+}
+
+/* Big Button */
+.big-btn{
+  margin:20px 16px;
+  width:calc(100% - 32px);
+  padding:18px;
+  border:none;
+  border-radius:999px;
+  font-size:18px;
+  font-weight:800;
+  background:linear-gradient(135deg,#38bdf8,#facc15);
+  box-shadow:0 0 25px rgba(56,189,248,.6);
+  animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{box-shadow:0 0 10px rgba(56,189,248,.4);}
+  to{box-shadow:0 0 30px rgba(250,204,21,.9);}
+}
+
+/* Plan Card */
+.plan-card{
+  margin:0 16px;
+  background:linear-gradient(135deg,#0b1220,#020617);
+  border-radius:22px;
+  padding:16px;
+}
+.plan-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:10px;
+}
+.plan-item{
+  background:rgba(255,255,255,0.04);
+  border-radius:14px;
+  padding:12px;
+  text-align:center;
+  font-size:13px;
+}
+
+/* Bottom Nav */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:80px;
+  background:linear-gradient(180deg,#0b1220,#020617);
+  display:flex;justify-content:space-around;align-items:center;
+}
+.bottom-nav .item{text-align:center;font-size:11px;color:#9ca3af;}
+.bottom-nav .item.active{color:#facc15;}
+.bottom-nav .center-btn{
+  position:relative;top:-28px;width:68px;height:68px;border-radius:50%;
+  background:linear-gradient(135deg,#facc15,#f59e0b);
+  display:flex;align-items:center;justify-content:center;
+}
+
+/* Animations */
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes float{
+  0%{transform:translate(-50%,-50%) translateY(0);}
+  50%{transform:translate(-50%,-50%) translateY(-6px);}
+  100%{transform:translate(-50%,-50%) translateY(0);}
+}
+@keyframes blink{
+  0%,90%,100%{transform:scaleY(1);}
+  95%{transform:scaleY(0.1);}
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<div class="header">
+  <h2>Mining</h2>
+  <i class="fa-solid fa-user" onclick="location.href='profile.html'"></i>
+</div>
+
+<div class="balance-card">
+  <span>Total Balance</span>
+  <h1 id="balance">0</h1>
+</div>
+
+<div class="team-row">
+  <div class="team-box">
+    <span>Team Size</span>
+    <h3 id="teamSize">0</h3>
+  </div>
+  <div class="team-box">
+    <span>Team Profit</span>
+    <h3 id="teamTotalProfit">0</h3>
+  </div>
+</div>
+
+<div class="miner-box">
+
+  <div class="robot-wrap">
+    <div class="energy-ring"></div>
+    <div class="robot">
+      <div class="head">
+        <div class="eye"></div>
+        <div class="eye"></div>
+      </div>
+      <div class="body"></div>
+    </div>
+  </div>
+
+  <div class="earn" id="currentEarn">0.0000</div>
+  <div style="opacity:.7;font-size:13px;">Robot is mining...</div>
+
+</div>
+
+<button class="big-btn" id="mineBtn" onclick="toggleMining()">Start Mining</button>
+
+<div class="plan-card">
+  <strong>Current Plan</strong>
+  <div class="plan-grid">
+    <div class="plan-item">Level<br><b id="level">0</b></div>
+    <div class="plan-item">Daily Rate<br><b id="dailyRate">0</b>%</div>
+  </div>
+</div>
+
+</div>
+
+<div class="bottom-nav">
+  <div class="item" onclick="location.href='home.html'">Home</div>
+  <div class="item" onclick="location.href='wallet.html'">Wallet</div>
+  <div class="center-btn" onclick="location.href='mining.html'"><i class="fa-solid fa-microchip"></i></div>
+  <div class="item" onclick="location.href='stats.html'">Stats</div>
+  <div class="item" onclick="location.href='profile.html'">Profile</div>
+</div>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDGo2POhmLnPrAwzh1Bq1VgXvYoVSmQiHU",
+  authDomain: "z4-miner.firebaseapp.com",
+  projectId: "z4-miner",
+  storageBucket: "z4-miner.firebasestorage.app",
+  messagingSenderId: "31334000454",
+  appId: "1:31334000454:web:3f61ded1c258eed5c46747"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+let currentUser=null, mining=false, interval=null, sessionEarn=0;
+
+auth.onAuthStateChanged(user=>{
+  if(!user) location.href="login.html";
+  else{ currentUser=user; loadData(); }
+});
+
+function loadData(){
+  db.collection("users").doc(currentUser.uid).get().then(doc=>{
+    const d=doc.data();
+    balance.innerText=d.balance||0;
+    teamSize.innerText=d.teamSize||0;
+    teamTotalProfit.innerText=d.teamTotalProfit||0;
+    level.innerText=d.level||0;
+    dailyRate.innerText=d.dailyRate||0;
+  });
+}
+
+function toggleMining(){
+  mining ? stopMining() : startMining();
+}
+
+function startMining(){
+  mining=true;
+  mineBtn.innerText="Stop Mining";
+  interval=setInterval(()=>{
+    sessionEarn+=0.0005;
+    currentEarn.innerText=sessionEarn.toFixed(4);
+  },1000);
+}
+
+function stopMining(){
+  mining=false;
+  mineBtn.innerText="Start Mining";
+  clearInterval(interval);
+}
+</script>
+
+</body>
+</html>
