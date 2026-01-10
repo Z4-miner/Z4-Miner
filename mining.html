@@ -18,172 +18,35 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:radial-gradient(circle at top,#0f172a,#020617);color:#fff;}
 .app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:120px;}
-
-/* Header */
 .header{padding:18px;display:flex;justify-content:space-between;align-items:center;}
 .header h2{font-weight:800;}
-
-/* Balance Card */
-.balance-card{
-  margin:0 16px;
-  background:linear-gradient(135deg,#020617,#111827);
-  border-radius:26px;
-  padding:22px;
-  text-align:center;
-  box-shadow:0 0 30px rgba(250,204,21,.25);
-}
+.balance-card{margin:0 16px;background:linear-gradient(135deg,#020617,#111827);border-radius:26px;padding:22px;text-align:center;box-shadow:0 0 30px rgba(250,204,21,.25);}
 .balance-card span{font-size:13px;opacity:.7;}
 .balance-card h1{font-size:36px;color:#facc15;margin-top:6px;}
-
-/* Team Row */
-.team-row{
-  margin:16px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.team-box{
-  background:linear-gradient(135deg,#0b1220,#020617);
-  border-radius:18px;
-  padding:14px;
-  text-align:center;
-}
+.team-row{margin:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.team-box{background:linear-gradient(135deg,#0b1220,#020617);border-radius:18px;padding:14px;text-align:center;}
 .team-box span{font-size:12px;opacity:.7;}
 .team-box h3{margin-top:6px;color:#38bdf8;}
-
-/* Miner Robot */
-.miner-box{
-  margin:20px 16px;
-  background:linear-gradient(135deg,#0b1220,#020617);
-  border-radius:28px;
-  padding:22px;
-  text-align:center;
-}
-
-.robot-wrap{
-  position:relative;
-  width:120px;
-  height:120px;
-  margin:0 auto 10px;
-}
-
-.energy-ring{
-  position:absolute;
-  inset:0;
-  border-radius:50%;
-  border:3px solid rgba(56,189,248,.2);
-  border-top:3px solid #38bdf8;
-  animation:spin 4s linear infinite;
-}
-
-.robot{
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-  animation:float 3s ease-in-out infinite;
-}
-
-.robot .head{
-  width:46px;
-  height:36px;
-  background:linear-gradient(135deg,#facc15,#f59e0b);
-  border-radius:10px;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  padding:0 6px;
-  box-shadow:0 0 12px rgba(250,204,21,.8);
-}
-
-.robot .eye{
-  width:6px;
-  height:6px;
-  background:#000;
-  border-radius:50%;
-  animation:blink 4s infinite;
-}
-
-.robot .body{
-  width:32px;
-  height:28px;
-  background:#38bdf8;
-  margin:4px auto 0;
-  border-radius:8px;
-  box-shadow:0 0 10px rgba(56,189,248,.6);
-}
-
-/* Earnings */
-.earn{
-  margin-top:10px;
-  font-size:26px;
-  color:#facc15;
-}
-
-/* Big Button */
-.big-btn{
-  margin:20px 16px;
-  width:calc(100% - 32px);
-  padding:18px;
-  border:none;
-  border-radius:999px;
-  font-size:18px;
-  font-weight:800;
-  background:linear-gradient(135deg,#38bdf8,#facc15);
-  box-shadow:0 0 25px rgba(56,189,248,.6);
-  animation:glow 2s infinite alternate;
-}
-
-@keyframes glow{
-  from{box-shadow:0 0 10px rgba(56,189,248,.4);}
-  to{box-shadow:0 0 30px rgba(250,204,21,.9);}
-}
-
-/* Plan Card */
-.plan-card{
-  margin:0 16px;
-  background:linear-gradient(135deg,#0b1220,#020617);
-  border-radius:22px;
-  padding:16px;
-}
-.plan-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-  margin-top:10px;
-}
-.plan-item{
-  background:rgba(255,255,255,0.04);
-  border-radius:14px;
-  padding:12px;
-  text-align:center;
-  font-size:13px;
-}
-
-/* Bottom Nav */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:80px;
-  background:linear-gradient(180deg,#0b1220,#020617);
-  display:flex;justify-content:space-around;align-items:center;
-}
+.miner-box{margin:20px 16px;background:linear-gradient(135deg,#0b1220,#020617);border-radius:28px;padding:22px;text-align:center;}
+.robot-wrap{position:relative;width:120px;height:120px;margin:0 auto 10px;}
+.energy-ring{position:absolute;inset:0;border-radius:50%;border:3px solid rgba(56,189,248,.2);border-top:3px solid #38bdf8;animation:spin 4s linear infinite;}
+.robot{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:float 3s ease-in-out infinite;}
+.robot .head{width:46px;height:36px;background:linear-gradient(135deg,#facc15,#f59e0b);border-radius:10px;display:flex;justify-content:space-around;align-items:center;padding:0 6px;box-shadow:0 0 12px rgba(250,204,21,.8);}
+.robot .eye{width:6px;height:6px;background:#000;border-radius:50%;animation:blink 4s infinite;}
+.robot .body{width:32px;height:28px;background:#38bdf8;margin:4px auto 0;border-radius:8px;box-shadow:0 0 10px rgba(56,189,248,.6);}
+.earn{margin-top:10px;font-size:26px;color:#facc15;}
+.big-btn{margin:20px 16px;width:calc(100% - 32px);padding:18px;border:none;border-radius:999px;font-size:18px;font-weight:800;background:linear-gradient(135deg,#38bdf8,#facc15);box-shadow:0 0 25px rgba(56,189,248,.6);}
+.big-btn:disabled{opacity:.6;}
+.plan-card{margin:0 16px;background:linear-gradient(135deg,#0b1220,#020617);border-radius:22px;padding:16px;}
+.plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;}
+.plan-item{background:rgba(255,255,255,0.04);border-radius:14px;padding:12px;text-align:center;font-size:13px;}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:80px;background:linear-gradient(180deg,#0b1220,#020617);display:flex;justify-content:space-around;align-items:center;}
 .bottom-nav .item{text-align:center;font-size:11px;color:#9ca3af;}
 .bottom-nav .item.active{color:#facc15;}
-.bottom-nav .center-btn{
-  position:relative;top:-28px;width:68px;height:68px;border-radius:50%;
-  background:linear-gradient(135deg,#facc15,#f59e0b);
-  display:flex;align-items:center;justify-content:center;
-}
-
-/* Animations */
+.bottom-nav .center-btn{position:relative;top:-28px;width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#facc15,#f59e0b);display:flex;align-items:center;justify-content:center;}
 @keyframes spin{to{transform:rotate(360deg);}}
-@keyframes float{
-  0%{transform:translate(-50%,-50%) translateY(0);}
-  50%{transform:translate(-50%,-50%) translateY(-6px);}
-  100%{transform:translate(-50%,-50%) translateY(0);}
-}
-@keyframes blink{
-  0%,90%,100%{transform:scaleY(1);}
-  95%{transform:scaleY(0.1);}
-}
+@keyframes float{0%{transform:translate(-50%,-50%) translateY(0);}50%{transform:translate(-50%,-50%) translateY(-6px);}100%{transform:translate(-50%,-50%) translateY(0);}}
+@keyframes blink{0%,90%,100%{transform:scaleY(1);}95%{transform:scaleY(0.1);}}
 </style>
 </head>
 <body>
@@ -212,24 +75,18 @@ body{background:radial-gradient(circle at top,#0f172a,#020617);color:#fff;}
 </div>
 
 <div class="miner-box">
-
   <div class="robot-wrap">
     <div class="energy-ring"></div>
     <div class="robot">
-      <div class="head">
-        <div class="eye"></div>
-        <div class="eye"></div>
-      </div>
+      <div class="head"><div class="eye"></div><div class="eye"></div></div>
       <div class="body"></div>
     </div>
   </div>
-
   <div class="earn" id="currentEarn">0.0000</div>
-  <div style="opacity:.7;font-size:13px;">Robot is mining...</div>
-
+  <div style="opacity:.7;font-size:13px;">Daily profit claim system</div>
 </div>
 
-<button class="big-btn" id="mineBtn" onclick="toggleMining()">Start Mining</button>
+<button class="big-btn" id="mineBtn" onclick="claimProfit()">Claim Daily Profit</button>
 
 <div class="plan-card">
   <strong>Current Plan</strong>
@@ -242,9 +99,9 @@ body{background:radial-gradient(circle at top,#0f172a,#020617);color:#fff;}
 </div>
 
 <div class="bottom-nav">
-  <div class="item" onclick="location.href='home.html'">Home</div>
+  <div class="item" onclick="location.href='index.html'">Home</div>
   <div class="item" onclick="location.href='wallet.html'">Wallet</div>
-  <div class="center-btn" onclick="location.href='mining.html'"><i class="fa-solid fa-microchip"></i></div>
+  <div class="center-btn"><i class="fa-solid fa-microchip"></i></div>
   <div class="item" onclick="location.href='stats.html'">Stats</div>
   <div class="item" onclick="location.href='profile.html'">Profile</div>
 </div>
@@ -258,12 +115,17 @@ const firebaseConfig = {
   messagingSenderId: "31334000454",
   appId: "1:31334000454:web:3f61ded1c258eed5c46747"
 };
-
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-let currentUser=null, mining=false, interval=null, sessionEarn=0;
+let currentUser = null;
+let userData = null;
+
+function todayKey(){
+  const d = new Date();
+  return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+}
 
 auth.onAuthStateChanged(user=>{
   if(!user) location.href="login.html";
@@ -272,32 +134,62 @@ auth.onAuthStateChanged(user=>{
 
 function loadData(){
   db.collection("users").doc(currentUser.uid).get().then(doc=>{
-    const d=doc.data();
-    balance.innerText=d.balance||0;
-    teamSize.innerText=d.teamSize||0;
-    teamTotalProfit.innerText=d.teamTotalProfit||0;
-    level.innerText=d.level||0;
-    dailyRate.innerText=d.dailyRate||0;
+    if(!doc.exists) return;
+    userData = doc.data();
+
+    balance.innerText = (userData.balance||0).toFixed(4);
+    teamSize.innerText = userData.teamSize||0;
+    teamTotalProfit.innerText = (userData.teamTotalProfit||0).toFixed(4);
+    level.innerText = userData.level||0;
+    dailyRate.innerText = userData.dailyRate||0;
+
+    currentEarn.innerText = (userData.dailyIncome||0).toFixed(4);
+
+    checkButton();
   });
 }
 
-function toggleMining(){
-  mining ? stopMining() : startMining();
+function checkButton(){
+  const today = todayKey();
+  if(userData.lastClaimDate === today){
+    mineBtn.innerText = "Already Claimed Today";
+    mineBtn.disabled = true;
+  }else{
+    mineBtn.innerText = "Claim Daily Profit";
+    mineBtn.disabled = false;
+  }
 }
 
-function startMining(){
-  mining=true;
-  mineBtn.innerText="Stop Mining";
-  interval=setInterval(()=>{
-    sessionEarn+=0.0005;
-    currentEarn.innerText=sessionEarn.toFixed(4);
-  },1000);
-}
+function claimProfit(){
+  const today = todayKey();
+  if(userData.lastClaimDate === today){
+    alert("Already claimed today");
+    return;
+  }
 
-function stopMining(){
-  mining=false;
-  mineBtn.innerText="Start Mining";
-  clearInterval(interval);
+  // ====== مؤقت ======
+  const dailyProfit = 1; // لاحقاً نربطها بالخطة
+
+  const newBalance = (userData.balance||0) + dailyProfit;
+  const newTotal = (userData.totalReturn||0) + dailyProfit;
+
+  db.collection("users").doc(currentUser.uid).update({
+    balance: newBalance,
+    totalReturn: newTotal,
+    dailyIncome: dailyProfit,
+    lastClaimDate: today
+  }).then(()=>{
+    userData.balance = newBalance;
+    userData.totalReturn = newTotal;
+    userData.dailyIncome = dailyProfit;
+    userData.lastClaimDate = today;
+
+    balance.innerText = newBalance.toFixed(4);
+    currentEarn.innerText = dailyProfit.toFixed(4);
+
+    checkButton();
+    alert("Profit claimed successfully!");
+  });
 }
 </script>
 
