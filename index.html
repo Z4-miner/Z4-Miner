@@ -1,181 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Z4 Miner - Wallet</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Arcade - Virtual Game Simulator</title>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #38bdf8;
+            --accent-hover: #0284c7;
+            --gold: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --win: #22c55e;
+            --lose: #ef4444;
+        }
 
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
-<!-- Icons -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:radial-gradient(circle at top,#0f172a,#020617);color:#fff;}
-.app{max-width:480px;margin:0 auto;min-height:100vh;padding-bottom:120px;}
+        /* Header */
+        header {
+            background-color: var(--bg-card);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #334155;
+        }
 
-.header{padding:18px;display:flex;justify-content:space-between;align-items:center;}
-.header h2{font-weight:800;}
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
 
-/* Balance Cards */
-.balances{
-  margin:0 16px;
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-}
-.balance-box{
-  background:linear-gradient(135deg,#0b1220,#020617);
-  border-radius:18px;
-  padding:14px;
-  text-align:center;
-}
-.balance-box span{font-size:11px;opacity:.7;}
-.balance-box h3{margin-top:6px;color:#facc15;}
+        .balance-box {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: #0f172a;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
 
-/* Card */
-.card{
-  margin:16px;
-  background:linear-gradient(135deg,#0b1220,#020617);
-  border-radius:22px;
-  padding:16px;
-}
+        .balance-amount {
+            font-weight: 700;
+            color: var(--gold);
+            font-size: 1.1rem;
+        }
 
-/* Inputs */
-.input{
-  width:100%;
-  padding:14px;
-  border-radius:14px;
-  border:none;
-  outline:none;
-  background:rgba(255,255,255,0.06);
-  color:#fff;
-  margin-top:10px;
-}
+        button {
+            background-color: var(--accent);
+            color: #0f172a;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
 
-/* Buttons */
-.btn{
-  width:100%;
-  margin-top:12px;
-  padding:14px;
-  border:none;
-  border-radius:999px;
-  font-weight:800;
-  background:linear-gradient(135deg,#38bdf8,#facc15);
-  color:#000;
-}
+        button:hover {
+            background-color: var(--accent-hover);
+            color: white;
+        }
 
-/* Copy */
-.copy-btn{
-  margin-top:10px;
-  background:#020617;
-  color:#facc15;
-  border:none;
-  padding:8px 14px;
-  border-radius:10px;
-}
+        button:active {
+            transform: scale(0.98);
+        }
 
-/* Bottom Nav */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:80px;
-  background:linear-gradient(180deg,#0b1220,#020617);
-  display:flex;justify-content:space-around;align-items:center;
-}
-.bottom-nav .item{text-align:center;font-size:11px;color:#9ca3af;}
-.bottom-nav .item.active{color:#facc15;}
-.bottom-nav .center-btn{
-  position:relative;top:-28px;width:68px;height:68px;border-radius:50%;
-  background:linear-gradient(135deg,#facc15,#f59e0b);
-  display:flex;align-items:center;justify-content:center;
-}
-</style>
+        button:disabled {
+            background-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: #131c31;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid #334155;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #0f172a;
+            border-color: var(--accent);
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            max-width: 800px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .game-panel {
+            display: none;
+            background: var(--bg-card);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .game-panel.active {
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Controls */
+        .bet-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        input[type="number"] {
+            background: #0f172a;
+            border: 1px solid #334155;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            width: 100px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .status-msg {
+            margin-top: 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            min-height: 1.5rem;
+        }
+
+        .win-text { color: var(--win); }
+        .lose-text { color: var(--lose); }
+
+        /* Slots Specific */
+        .reels {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .reel {
+            width: 90px;
+            height: 90px;
+            background: #0f172a;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        /* Blackjack Specific */
+        .bj-table {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .hand-area {
+            background: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            min-height: 60px;
+        }
+
+        .card {
+            background: white;
+            color: #0f172a;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            min-width: 45px;
+        }
+
+        .card.red { color: #dc2626; }
+
+        /* High-Low Specific */
+        .hl-display {
+            font-size: 4rem;
+            font-weight: 800;
+            background: #0f172a;
+            width: 120px;
+            height: 120px;
+            margin: 1.5rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 2px solid var(--gold);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid #334155;
+        }
+    </style>
 </head>
 <body>
 
-<div class="app">
+    <header>
+        <div class="logo">NEON ARCADE</div>
+        <div class="balance-box">
+            <span>Balance: <span class="balance-amount" id="balance">1000</span> PTS</span>
+            <button onclick="resetBalance()">Reset Points</button>
+        </div>
+    </header>
 
-<div class="header">
-  <h2>Wallet</h2>
-  <i class="fa-solid fa-user" onclick="location.href='profile.html'"></i>
-</div>
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('slots', this)">Slots</button>
+        <button class="tab-btn" onclick="switchTab('blackjack', this)">Blackjack</button>
+        <button class="tab-btn" onclick="switchTab('highlow', this)">High / Low</button>
+    </nav>
 
-<div class="balances">
-  <div class="balance-box"><span>Total</span><h3 id="balance">0</h3></div>
-  <div class="balance-box"><span>Available</span><h3 id="availableBalance">0</h3></div>
-  <div class="balance-box"><span>Locked</span><h3 id="lockedBalance">0</h3></div>
-</div>
+    <main>
+        <!-- SLOTS GAME -->
+        <section id="slots" class="game-panel active">
+            <h2>Classic Slots</h2>
+            <p class="subtitle">Match 3 symbols for 5x points, or 2 symbols for 1.5x points.</p>
+            
+            <div class="reels">
+                <div class="reel" id="reel1">🍒</div>
+                <div class="reel" id="reel2">🍋</div>
+                <div class="reel" id="reel3">💎</div>
+            </div>
 
-<div class="card">
-  <strong>Deposit</strong>
-  <div id="depositAddress" style="margin-top:10px;font-size:12px;word-break:break-all;">Not assigned</div>
-  <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
-</div>
+            <div class="bet-controls">
+                <label>Wager:</label>
+                <input type="number" id="slot-bet" value="50" min="10" max="500">
+                <button id="spin-btn" onclick="playSlots()">SPIN</button>
+            </div>
+            <div class="status-msg" id="slot-status"></div>
+        </section>
 
-<div class="card">
-  <strong>Withdraw</strong>
-  <input class="input" id="withdrawAmount" placeholder="Enter amount">
-  <button class="btn" onclick="requestWithdraw()">Request Withdraw</button>
-</div>
+        <!-- BLACKJACK GAME -->
+        <section id="blackjack" class="game-panel">
+            <h2>Blackjack</h2>
+            <p class="subtitle">Get closer to 21 than the dealer without going over.</p>
 
-</div>
+            <div class="bj-table">
+                <div class="hand-area">
+                    <div>Dealer Hand (<span id="dealer-score">0</span>)</div>
+                    <div class="cards" id="dealer-cards"></div>
+                </div>
+                <div class="hand-area">
+                    <div>Your Hand (<span id="player-score">0</span>)</div>
+                    <div class="cards" id="player-cards"></div>
+                </div>
+            </div>
 
-<div class="bottom-nav">
-  <div class="item" onclick="location.href='home.html'">Home</div>
-  <div class="item active" onclick="location.href='wallet.html'">Wallet</div>
-  <div class="center-btn" onclick="location.href='mining.html'"><i class="fa-solid fa-microchip"></i></div>
-  <div class="item" onclick="location.href='stats.html'">Stats</div>
-  <div class="item" onclick="location.href='profile.html'">Profile</div>
-</div>
+            <div class="bet-controls" id="bj-start-controls">
+                <label>Wager:</label>
+                <input type="number" id="bj-bet" value="50" min="10" max="500">
+                <button onclick="startBlackjack()">DEAL</button>
+            </div>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDGo2POhmLnPrAwzh1Bq1VgXvYoVSmQiHU",
-  authDomain: "z4-miner.firebaseapp.com",
-  projectId: "z4-miner",
-  storageBucket: "z4-miner.firebasestorage.app",
-  messagingSenderId: "31334000454",
-  appId: "1:31334000454:web:3f61ded1c258eed5c46747"
-};
+            <div class="bet-controls" id="bj-action-controls" style="display: none;">
+                <button onclick="bjHit()">HIT</button>
+                <button onclick="bjStand()">STAND</button>
+            </div>
+            <div class="status-msg" id="bj-status"></div>
+        </section>
 
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const db = firebase.firestore();
+        <!-- HIGH / LOW GAME -->
+        <section id="highlow" class="game-panel">
+            <h2>High / Low</h2>
+            <p class="subtitle">Guess if the next number (1–100) will be higher or lower.</p>
 
-let currentUser=null;
+            <div class="hl-display" id="hl-current">50</div>
 
-auth.onAuthStateChanged(user=>{
-  if(!user) location.href="login.html";
-  else{ currentUser=user; loadWallet(); }
-});
+            <div class="bet-controls">
+                <label>Wager:</label>
+                <input type="number" id="hl-bet" value="50" min="10" max="500">
+            </div>
+            <div class="bet-controls">
+                <button onclick="playHighLow('high')">HIGHER ▲</button>
+                <button onclick="playHighLow('low')">LOWER ▼</button>
+            </div>
+            <div class="status-msg" id="hl-status"></div>
+        </section>
+    </main>
 
-function loadWallet(){
-  db.collection("users").doc(currentUser.uid).get().then(doc=>{
-    const d=doc.data();
-    balance.innerText=d.balance||0;
-    availableBalance.innerText=d.availableBalance||0;
-    lockedBalance.innerText=d.lockedBalance||0;
-    depositAddress.innerText=d.depositAddress || "Not assigned";
-  });
-}
+    <footer>
+        Educational Browser Game Simulator • Virtual points have no real-world monetary value.
+    </footer>
 
-function copyAddress(){
-  navigator.clipboard.writeText(depositAddress.innerText);
-  alert("Address copied");
-}
+    <script>
+        // --- GLOBAL STATE ---
+        let balance = 1000;
 
-function requestWithdraw(){
-  const amount=parseFloat(withdrawAmount.value);
-  if(!amount || amount<=0){ alert("Enter valid amount"); return; }
+        function updateBalance(amount) {
+            balance += amount;
+            document.getElementById('balance').textContent = Math.floor(balance);
+        }
 
-  alert("Withdraw request sent (demo)");
-  withdrawAmount.value="";
-}
-</script>
+        function resetBalance() {
+            balance = 1000;
+            updateBalance(0);
+        }
 
+        function switchTab(gameId, btn) {
+            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(gameId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function setStatus(elementId, text, type) {
+            const el = document.getElementById(elementId);
+            el.textContent = text;
+            el.className = 'status-msg ' + (type === 'win' ? 'win-text' : type === 'lose' ? 'lose-text' : '');
+        }
+
+        // --- SLOTS LOGIC ---
+        const symbols = ['🍒', '🍋', '🍇', '🔔', '💎', '7️⃣'];
+        
+        function playSlots() {
+            const bet = parseInt(document.getElementById('slot-bet').value);
+            if (isNaN(bet) || bet <= 0 || bet > balance) {
+                setStatus('slot-status', 'Invalid wager amount.', 'lose');
+                return;
+            }
+
+            updateBalance(-bet);
+            const r1 = symbols[Math.floor(Math.random() * symbols.length)];
+            const r2 = symbols[Math.floor(Math.random() * symbols.length)];
+            const r3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+            document.getElementById('reel1').textContent = r1;
+            document.getElementById('reel2').textContent = r2;
+            document.getElementById('reel3').textContent = r3;
+
+            if (r1 === r2 && r2 === r3) {
+                const win = bet * 5;
+                updateBalance(win);
+                setStatus('slot-status', `Jackpot! You won ${win} PTS!`, 'win');
+            } else if (r1 === r2 || r2 === r3 || r1 === r3) {
+                const win = Math.floor(bet * 1.5);
+                updateBalance(win);
+                setStatus('slot-status', `Pair match! You won ${win} PTS!`, 'win');
+            } else {
+                setStatus('slot-status', 'No match. Try again!', 'lose');
+            }
+        }
+
+        // --- BLACKJACK LOGIC ---
+        let deck = [], playerHand = [], dealerHand = [], currentBjBet = 0;
+
+        function createDeck() {
+            const suits = ['♠', '♥', '♦', '♣'];
+            const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
+            deck = [];
+            for (let s of suits) {
+                for (let v of values) {
+                    deck.push({ suit: s, value: v });
+                }
+            }
+            deck.sort(() => Math.random() - 0.5);
+        }
+
+        function getHandScore(hand) {
+            let score = 0;
+            let aces = 0;
+            for (let card of hand) {
+                if (['J', 'Q', 'K'].includes(card.value)) score += 10;
+                else if (card.value === 'A') { score += 11; aces++; }
+                else score += parseInt(card.value);
+            }
+            while (score > 21 && aces > 0) {
+                score -= 10;
+                aces--;
+            }
+            return score;
+        }
+
+        function renderHands(hideDealer = true) {
+            const pContainer = document.getElementById('player-cards');
+            const dContainer = document.getElementById('dealer-cards');
+            pContainer.innerHTML = '';
+            dContainer.innerHTML = '';
+
+            playerHand.forEach(c => {
+                const isRed = c.suit === '♥' || c.suit === '♦';
+                pContainer.innerHTML += `<div class="card ${isRed ? 'red' : ''}">${c.value}${c.suit}</div>`;
+            });
+
+            dealerHand.forEach((c, idx) => {
+                if (idx === 1 && hideDealer) {
+                    dContainer.innerHTML += `<div class="card">?</div>`;
+                } else {
+                    const isRed = c.suit === '♥' || c.suit === '♦';
+                    dContainer.innerHTML += `<div class="card ${isRed ? 'red' : ''}">${c.value}${c.suit}</div>`;
+                }
+            });
+
+            document.getElementById('player-score').textContent = getHandScore(playerHand);
+            document.getElementById('dealer-score').textContent = hideDealer ? '?' : getHandScore(dealerHand);
+        }
+
+        function startBlackjack() {
+            const bet = parseInt(document.getElementById('bj-bet').value);
+            if (isNaN(bet) || bet <= 0 || bet > balance) {
+                setStatus('bj-status', 'Invalid wager amount.', 'lose');
+                return;
+            }
+
+            currentBjBet = bet;
+            updateBalance(-bet);
+            createDeck();
+            playerHand = [deck.pop(), deck.pop()];
+            dealerHand = [deck.pop(), deck.pop()];
+
+            document.getElementById('bj-start-controls').style.display = 'none';
+            document.getElementById('bj-action-controls').style.display = 'flex';
+            setStatus('bj-status', '', '');
+            renderHands(true);
+
+            if (getHandScore(playerHand) === 21) {
+                bjStand();
+            }
+        }
+
+        function bjHit() {
+            playerHand.push(deck.pop());
+            renderHands(true);
+            if (getHandScore(playerHand) > 21) {
+                endBlackjack('Bust! You went over 21.', 'lose');
+            }
+        }
+
+        function bjStand() {
+            while (getHandScore(dealerHand) < 17) {
+                dealerHand.push(deck.pop());
+            }
+            renderHands(false);
+
+            const pScore = getHandScore(playerHand);
+            const dScore = getHandScore(dealerHand);
+
+            if (dScore > 21 || pScore > dScore) {
+                const win = currentBjBet * 2;
+                updateBalance(win);
+                endBlackjack(`You win ${win} PTS!`, 'win');
+            } else if (pScore === dScore) {
+                updateBalance(currentBjBet);
+                endBlackjack('Push! Wager returned.', '');
+            } else {
+                endBlackjack('Dealer wins.', 'lose');
+            }
+        }
+
+        function endBlackjack(msg, type) {
+            renderHands(false);
+            setStatus('bj-status', msg, type);
+            document.getElementById('bj-start-controls').style.display = 'flex';
+            document.getElementById('bj-action-controls').style.display = 'none';
+        }
+
+        // --- HIGH / LOW LOGIC ---
+        let currentNumber = 50;
+
+        function playHighLow(guess) {
+            const bet = parseInt(document.getElementById('hl-bet').value);
+            if (isNaN(bet) || bet <= 0 || bet > balance) {
+                setStatus('hl-status', 'Invalid wager amount.', 'lose');
+                return;
+            }
+
+            updateBalance(-bet);
+            const nextNumber = Math.floor(Math.random() * 100) + 1;
+            const won = (guess === 'high' && nextNumber > currentNumber) || 
+                        (guess === 'low' && nextNumber < currentNumber);
+
+            document.getElementById('hl-current').textContent = nextNumber;
+
+            if (nextNumber === currentNumber) {
+                updateBalance(bet);
+                setStatus('hl-status', `Same number (${nextNumber})! Wager returned.`, '');
+            } else if (won) {
+                const win = Math.floor(bet * 1.9);
+                updateBalance(win);
+                setStatus('hl-status', `Correct! Rolled ${nextNumber}. Won ${win} PTS!`, 'win');
+            } else {
+                setStatus('hl-status', `Wrong! Rolled ${nextNumber}.`, 'lose');
+            }
+
+            currentNumber = nextNumber;
+        }
+    </script>
 </body>
 </html>
