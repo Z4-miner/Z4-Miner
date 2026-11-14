@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Arcade - Virtual Game Simulator</title>
+    <title>Neon Royale - Login & Register</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --accent: #38bdf8;
-            --accent-hover: #0284c7;
-            --gold: #f59e0b;
+            --bg-dark: #090d16;
+            --bg-card: #131c2e;
+            --bg-input: #1a263d;
+            --accent: #f59e0b;
+            --accent-hover: #d97706;
+            --accent-glow: rgba(245, 158, 11, 0.25);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --win: #22c55e;
-            --lose: #ef4444;
+            --border: #22344f;
+            --error: #ef4444;
+            --success: #22c55e;
         }
 
         * {
@@ -27,524 +29,308 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
-        }
-
-        /* Header */
-        header {
-            background-color: var(--bg-card);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #334155;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1px;
-            color: var(--accent);
-        }
-
-        .balance-box {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: #0f172a;
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
-            border: 1px solid #334155;
-        }
-
-        .balance-amount {
-            font-weight: 700;
-            color: var(--gold);
-            font-size: 1.1rem;
-        }
-
-        button {
-            background-color: var(--accent);
-            color: #0f172a;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-        }
-
-        button:hover {
-            background-color: var(--accent-hover);
-            color: white;
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button:disabled {
-            background-color: #475569;
-            color: #94a3b8;
-            cursor: not-allowed;
-        }
-
-        /* Navigation */
-        nav {
-            display: flex;
             justify-content: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: #131c31;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(245, 158, 11, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 40%);
+            padding: 1rem;
         }
 
-        .tab-btn {
-            background: var(--bg-card);
-            color: var(--text-main);
-            border: 1px solid #334155;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-        }
-
-        .tab-btn.active {
-            background: var(--accent);
-            color: #0f172a;
-            border-color: var(--accent);
-        }
-
-        /* Main Container */
-        main {
-            flex: 1;
-            max-width: 800px;
+        .auth-container {
             width: 100%;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-
-        .game-panel {
-            display: none;
+            max-width: 440px;
             background: var(--bg-card);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid #334155;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(245, 158, 11, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Glow Bar */
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24);
+        }
+
+        .brand-header {
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .game-panel.active {
-            display: block;
-        }
-
-        h2 {
-            margin-bottom: 0.5rem;
-            font-size: 1.8rem;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
             margin-bottom: 2rem;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .brand-subtitle {
+            color: var(--text-muted);
             font-size: 0.9rem;
         }
 
-        /* Controls */
-        .bet-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        input[type="number"] {
-            background: #0f172a;
-            border: 1px solid #334155;
-            color: white;
-            padding: 0.5rem;
-            border-radius: 6px;
-            width: 100px;
-            text-align: center;
-            font-size: 1rem;
-        }
-
-        .status-msg {
-            margin-top: 1.5rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            min-height: 1.5rem;
-        }
-
-        .win-text { color: var(--win); }
-        .lose-text { color: var(--lose); }
-
-        /* Slots Specific */
-        .reels {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .reel {
-            width: 90px;
-            height: 90px;
-            background: #0f172a;
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-
-        /* Blackjack Specific */
-        .bj-table {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .hand-area {
-            background: #0f172a;
-            padding: 1rem;
+        /* Toggle Tabs */
+        .auth-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            background: var(--bg-dark);
             border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
         }
 
-        .cards {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-            min-height: 60px;
-        }
-
-        .card {
-            background: white;
-            color: #0f172a;
-            padding: 0.5rem 0.75rem;
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.75rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
             border-radius: 6px;
-            font-weight: 800;
-            font-size: 1.2rem;
-            min-width: 45px;
+            transition: all 0.2s ease;
         }
 
-        .card.red { color: #dc2626; }
+        .tab-btn.active {
+            background: var(--bg-input);
+            color: var(--text-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
 
-        /* High-Low Specific */
-        .hl-display {
-            font-size: 4rem;
-            font-weight: 800;
-            background: #0f172a;
-            width: 120px;
-            height: 120px;
-            margin: 1.5rem auto;
+        /* Forms */
+        .form-panel {
+            display: none;
+        }
+
+        .form-panel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .bonus-highlight {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.03);
+        }
+
+        .bonus-hint {
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 0.35rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            border: 2px solid var(--gold);
+            gap: 4px;
         }
 
-        footer {
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #090d16;
+            border: none;
+            padding: 0.95rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: filter 0.2s, transform 0.1s;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .submit-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .form-footer-msg {
+            margin-top: 1rem;
             text-align: center;
-            padding: 1.5rem;
-            color: var(--text-muted);
             font-size: 0.85rem;
-            border-top: 1px solid #334155;
+            min-height: 1.2rem;
+        }
+
+        .msg-error { color: var(--error); }
+        .msg-success { color: var(--success); font-weight: 600; }
+
+        /* Terms / Footer note */
+        .terms {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">NEON ARCADE</div>
-        <div class="balance-box">
-            <span>Balance: <span class="balance-amount" id="balance">1000</span> PTS</span>
-            <button onclick="resetBalance()">Reset Points</button>
+    <div class="auth-container">
+        <div class="brand-header">
+            <div class="brand-logo">Neon Royale</div>
+            <div class="brand-subtitle">Enter the ultimate gaming arena</div>
         </div>
-    </header>
 
-    <nav>
-        <button class="tab-btn active" onclick="switchTab('slots', this)">Slots</button>
-        <button class="tab-btn" onclick="switchTab('blackjack', this)">Blackjack</button>
-        <button class="tab-btn" onclick="switchTab('highlow', this)">High / Low</button>
-    </nav>
+        <!-- Navigation Tabs -->
+        <div class="auth-tabs">
+            <button class="tab-btn active" id="login-tab" onclick="switchView('login')">Sign In</button>
+            <button class="tab-btn" id="register-tab" onclick="switchView('register')">Register</button>
+        </div>
 
-    <main>
-        <!-- SLOTS GAME -->
-        <section id="slots" class="game-panel active">
-            <h2>Classic Slots</h2>
-            <p class="subtitle">Match 3 symbols for 5x points, or 2 symbols for 1.5x points.</p>
-            
-            <div class="reels">
-                <div class="reel" id="reel1">🍒</div>
-                <div class="reel" id="reel2">🍋</div>
-                <div class="reel" id="reel3">💎</div>
-            </div>
-
-            <div class="bet-controls">
-                <label>Wager:</label>
-                <input type="number" id="slot-bet" value="50" min="10" max="500">
-                <button id="spin-btn" onclick="playSlots()">SPIN</button>
-            </div>
-            <div class="status-msg" id="slot-status"></div>
-        </section>
-
-        <!-- BLACKJACK GAME -->
-        <section id="blackjack" class="game-panel">
-            <h2>Blackjack</h2>
-            <p class="subtitle">Get closer to 21 than the dealer without going over.</p>
-
-            <div class="bj-table">
-                <div class="hand-area">
-                    <div>Dealer Hand (<span id="dealer-score">0</span>)</div>
-                    <div class="cards" id="dealer-cards"></div>
+        <!-- LOGIN FORM -->
+        <div id="login-panel" class="form-panel active">
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label>Email or Username</label>
+                    <input type="text" id="login-user" required placeholder="player@example.com">
                 </div>
-                <div class="hand-area">
-                    <div>Your Hand (<span id="player-score">0</span>)</div>
-                    <div class="cards" id="player-cards"></div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="login-pass" required placeholder="••••••••">
                 </div>
-            </div>
+                <button type="submit" class="submit-btn">Sign In</button>
+                <div class="form-footer-msg" id="login-msg"></div>
+            </form>
+        </div>
 
-            <div class="bet-controls" id="bj-start-controls">
-                <label>Wager:</label>
-                <input type="number" id="bj-bet" value="50" min="10" max="500">
-                <button onclick="startBlackjack()">DEAL</button>
-            </div>
+        <!-- REGISTER FORM -->
+        <div id="register-panel" class="form-panel">
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <label>Username</label>
+                    <input type="text" id="reg-user" required placeholder="Choose a username">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="reg-email" required placeholder="player@example.com">
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-pass" required placeholder="Create a strong password">
+                </div>
+                <div class="input-group">
+                    <label>Bonus Code (Optional)</label>
+                    <input type="text" id="reg-code" class="bonus-highlight" placeholder="e.g. MRBEAST">
+                    <div class="bonus-hint">✨ Enter code for instant $3,200 bonus balance credit</div>
+                </div>
+                <button type="submit" class="submit-btn">Create Account</button>
+                <div class="form-footer-msg" id="reg-msg"></div>
+            </form>
+        </div>
 
-            <div class="bet-controls" id="bj-action-controls" style="display: none;">
-                <button onclick="bjHit()">HIT</button>
-                <button onclick="bjStand()">STAND</button>
-            </div>
-            <div class="status-msg" id="bj-status"></div>
-        </section>
-
-        <!-- HIGH / LOW GAME -->
-        <section id="highlow" class="game-panel">
-            <h2>High / Low</h2>
-            <p class="subtitle">Guess if the next number (1–100) will be higher or lower.</p>
-
-            <div class="hl-display" id="hl-current">50</div>
-
-            <div class="bet-controls">
-                <label>Wager:</label>
-                <input type="number" id="hl-bet" value="50" min="10" max="500">
-            </div>
-            <div class="bet-controls">
-                <button onclick="playHighLow('high')">HIGHER ▲</button>
-                <button onclick="playHighLow('low')">LOWER ▼</button>
-            </div>
-            <div class="status-msg" id="hl-status"></div>
-        </section>
-    </main>
-
-    <footer>
-        Educational Browser Game Simulator • Virtual points have no real-world monetary value.
-    </footer>
+        <div class="terms">
+            By signing up, you verify that you are of legal age and agree to our Virtual Terms of Service. Simulator points hold no cash value.
+        </div>
+    </div>
 
     <script>
-        // --- GLOBAL STATE ---
-        let balance = 1000;
+        function switchView(view) {
+            const loginTab = document.getElementById('login-tab');
+            const registerTab = document.getElementById('register-tab');
+            const loginPanel = document.getElementById('login-panel');
+            const registerPanel = document.getElementById('register-panel');
 
-        function updateBalance(amount) {
-            balance += amount;
-            document.getElementById('balance').textContent = Math.floor(balance);
-        }
-
-        function resetBalance() {
-            balance = 1000;
-            updateBalance(0);
-        }
-
-        function switchTab(gameId, btn) {
-            document.querySelectorAll('.game-panel').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(gameId).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function setStatus(elementId, text, type) {
-            const el = document.getElementById(elementId);
-            el.textContent = text;
-            el.className = 'status-msg ' + (type === 'win' ? 'win-text' : type === 'lose' ? 'lose-text' : '');
-        }
-
-        // --- SLOTS LOGIC ---
-        const symbols = ['🍒', '🍋', '🍇', '🔔', '💎', '7️⃣'];
-        
-        function playSlots() {
-            const bet = parseInt(document.getElementById('slot-bet').value);
-            if (isNaN(bet) || bet <= 0 || bet > balance) {
-                setStatus('slot-status', 'Invalid wager amount.', 'lose');
-                return;
-            }
-
-            updateBalance(-bet);
-            const r1 = symbols[Math.floor(Math.random() * symbols.length)];
-            const r2 = symbols[Math.floor(Math.random() * symbols.length)];
-            const r3 = symbols[Math.floor(Math.random() * symbols.length)];
-
-            document.getElementById('reel1').textContent = r1;
-            document.getElementById('reel2').textContent = r2;
-            document.getElementById('reel3').textContent = r3;
-
-            if (r1 === r2 && r2 === r3) {
-                const win = bet * 5;
-                updateBalance(win);
-                setStatus('slot-status', `Jackpot! You won ${win} PTS!`, 'win');
-            } else if (r1 === r2 || r2 === r3 || r1 === r3) {
-                const win = Math.floor(bet * 1.5);
-                updateBalance(win);
-                setStatus('slot-status', `Pair match! You won ${win} PTS!`, 'win');
+            if (view === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginPanel.classList.add('active');
+                registerPanel.classList.remove('active');
             } else {
-                setStatus('slot-status', 'No match. Try again!', 'lose');
+                registerTab.classList.add('active');
+                loginTab.classList.remove('active');
+                registerPanel.classList.add('active');
+                loginPanel.classList.remove('active');
             }
         }
 
-        // --- BLACKJACK LOGIC ---
-        let deck = [], playerHand = [], dealerHand = [], currentBjBet = 0;
-
-        function createDeck() {
-            const suits = ['♠', '♥', '♦', '♣'];
-            const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-            deck = [];
-            for (let s of suits) {
-                for (let v of values) {
-                    deck.push({ suit: s, value: v });
-                }
-            }
-            deck.sort(() => Math.random() - 0.5);
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-user').value;
+            const msg = document.getElementById('login-msg');
+            
+            msg.className = 'form-footer-msg msg-success';
+            msg.textContent = `Welcome back, ${user}! Loading dashboard...`;
+            
+            setTimeout(() => {
+                // Simulation redirect or state completion
+            }, 1200);
         }
 
-        function getHandScore(hand) {
-            let score = 0;
-            let aces = 0;
-            for (let card of hand) {
-                if (['J', 'Q', 'K'].includes(card.value)) score += 10;
-                else if (card.value === 'A') { score += 11; aces++; }
-                else score += parseInt(card.value);
-            }
-            while (score > 21 && aces > 0) {
-                score -= 10;
-                aces--;
-            }
-            return score;
-        }
+        function handleRegister(e) {
+            e.preventDefault();
+            const user = document.getElementById('reg-user').value;
+            const code = document.getElementById('reg-code').value.trim().toUpperCase();
+            const msg = document.getElementById('reg-msg');
 
-        function renderHands(hideDealer = true) {
-            const pContainer = document.getElementById('player-cards');
-            const dContainer = document.getElementById('dealer-cards');
-            pContainer.innerHTML = '';
-            dContainer.innerHTML = '';
+            let startingBalance = 1000; // Standard balance
 
-            playerHand.forEach(c => {
-                const isRed = c.suit === '♥' || c.suit === '♦';
-                pContainer.innerHTML += `<div class="card ${isRed ? 'red' : ''}">${c.value}${c.suit}</div>`;
-            });
-
-            dealerHand.forEach((c, idx) => {
-                if (idx === 1 && hideDealer) {
-                    dContainer.innerHTML += `<div class="card">?</div>`;
-                } else {
-                    const isRed = c.suit === '♥' || c.suit === '♦';
-                    dContainer.innerHTML += `<div class="card ${isRed ? 'red' : ''}">${c.value}${c.suit}</div>`;
-                }
-            });
-
-            document.getElementById('player-score').textContent = getHandScore(playerHand);
-            document.getElementById('dealer-score').textContent = hideDealer ? '?' : getHandScore(dealerHand);
-        }
-
-        function startBlackjack() {
-            const bet = parseInt(document.getElementById('bj-bet').value);
-            if (isNaN(bet) || bet <= 0 || bet > balance) {
-                setStatus('bj-status', 'Invalid wager amount.', 'lose');
-                return;
-            }
-
-            currentBjBet = bet;
-            updateBalance(-bet);
-            createDeck();
-            playerHand = [deck.pop(), deck.pop()];
-            dealerHand = [deck.pop(), deck.pop()];
-
-            document.getElementById('bj-start-controls').style.display = 'none';
-            document.getElementById('bj-action-controls').style.display = 'flex';
-            setStatus('bj-status', '', '');
-            renderHands(true);
-
-            if (getHandScore(playerHand) === 21) {
-                bjStand();
-            }
-        }
-
-        function bjHit() {
-            playerHand.push(deck.pop());
-            renderHands(true);
-            if (getHandScore(playerHand) > 21) {
-                endBlackjack('Bust! You went over 21.', 'lose');
-            }
-        }
-
-        function bjStand() {
-            while (getHandScore(dealerHand) < 17) {
-                dealerHand.push(deck.pop());
-            }
-            renderHands(false);
-
-            const pScore = getHandScore(playerHand);
-            const dScore = getHandScore(dealerHand);
-
-            if (dScore > 21 || pScore > dScore) {
-                const win = currentBjBet * 2;
-                updateBalance(win);
-                endBlackjack(`You win ${win} PTS!`, 'win');
-            } else if (pScore === dScore) {
-                updateBalance(currentBjBet);
-                endBlackjack('Push! Wager returned.', '');
+            if (code === 'MRBEAST') {
+                startingBalance = 3200;
+                msg.className = 'form-footer-msg msg-success';
+                msg.textContent = `Success! MRBEAST code applied: $3,200 bonus credited!`;
+            } else if (code !== '') {
+                msg.className = 'form-footer-msg msg-error';
+                msg.textContent = `Invalid bonus code entered. Account created with standard balance.`;
             } else {
-                endBlackjack('Dealer wins.', 'lose');
-            }
-        }
-
-        function endBlackjack(msg, type) {
-            renderHands(false);
-            setStatus('bj-status', msg, type);
-            document.getElementById('bj-start-controls').style.display = 'flex';
-            document.getElementById('bj-action-controls').style.display = 'none';
-        }
-
-        // --- HIGH / LOW LOGIC ---
-        let currentNumber = 50;
-
-        function playHighLow(guess) {
-            const bet = parseInt(document.getElementById('hl-bet').value);
-            if (isNaN(bet) || bet <= 0 || bet > balance) {
-                setStatus('hl-status', 'Invalid wager amount.', 'lose');
-                return;
+                msg.className = 'form-footer-msg msg-success';
+                msg.textContent = `Account created successfully for ${user}!`;
             }
 
-            updateBalance(-bet);
-            const nextNumber = Math.floor(Math.random() * 100) + 1;
-            const won = (guess === 'high' && nextNumber > currentNumber) || 
-                        (guess === 'low' && nextNumber < currentNumber);
-
-            document.getElementById('hl-current').textContent = nextNumber;
-
-            if (nextNumber === currentNumber) {
-                updateBalance(bet);
-                setStatus('hl-status', `Same number (${nextNumber})! Wager returned.`, '');
-            } else if (won) {
-                const win = Math.floor(bet * 1.9);
-                updateBalance(win);
-                setStatus('hl-status', `Correct! Rolled ${nextNumber}. Won ${win} PTS!`, 'win');
-            } else {
-                setStatus('hl-status', `Wrong! Rolled ${nextNumber}.`, 'lose');
-            }
-
-            currentNumber = nextNumber;
+            setTimeout(() => {
+                // Simulation transition
+            }, 1500);
         }
     </script>
 </body>
